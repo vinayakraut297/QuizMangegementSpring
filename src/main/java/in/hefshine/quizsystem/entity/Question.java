@@ -75,8 +75,6 @@ public class Question {
 
 	private int correctAnswerIndex;
 
-	
-	
 	@ManyToOne
 	@JoinColumn(name = "quiz_id", nullable = false)
 	private Quiz quiz;

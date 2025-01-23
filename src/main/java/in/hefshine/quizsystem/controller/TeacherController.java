@@ -14,7 +14,7 @@ import in.hefshine.quizsystem.service.TeacherService;
 
 @RestController
 @RequestMapping("/api/teacher")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class TeacherController {
 
     @Autowired

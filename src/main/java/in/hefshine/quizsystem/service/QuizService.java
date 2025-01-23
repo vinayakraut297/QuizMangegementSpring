@@ -1,6 +1,7 @@
 package in.hefshine.quizsystem.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import in.hefshine.quizsystem.exception.ResourceNotFoundException;
 import in.hefshine.quizsystem.repository.AnswerRepository;
 import in.hefshine.quizsystem.repository.QuestionRepository;
 import in.hefshine.quizsystem.repository.QuizRepository;
+import in.hefshine.quizsystem.service.QuizResult.QuizQuestionResult;
 
 @Service
 public class QuizService {
@@ -69,7 +71,32 @@ public class QuizService {
 	    }
 	}
 
-	
-	
+	public QuizResult getQuizResult(String quizTitle, Map<Long, Integer> answers) {
+	    Quiz quiz = quizRepository.findByTitle(quizTitle);
+	    List<QuizQuestionResult> results = new ArrayList<>();
+	    boolean pass = true;
+
+	    if (quiz != null) {
+	        for (Map.Entry<Long, Integer> entry : answers.entrySet()) {
+	            Long questionId = entry.getKey();
+	            Integer selectedOptionIndex = entry.getValue();
+	            Question question = questionRepository.findById(questionId).orElse(null);
+	            
+	            if (question != null) {
+	                // Check if the selected answer is correct
+	                boolean correct = selectedOptionIndex.equals(question.getCorrectAnswerIndex());
+	                if (!correct) {
+	                    pass = false;  // Set pass to false if any answer is incorrect
+	                }
+	                results.add(new QuizQuestionResult(question.getText(), question.getOptions().get(question.getCorrectAnswerIndex()), 
+	                                                    question.getOptions().get(selectedOptionIndex), correct));
+	            }
+	        }
+	    }
+	    return new QuizResult(pass, results);
+	}
+	public QuizResult getQuizResults(String quizTitle, Map<Long, Integer> answers) {
+	    return getQuizResult(quizTitle, answers);
+	}
 
 }
