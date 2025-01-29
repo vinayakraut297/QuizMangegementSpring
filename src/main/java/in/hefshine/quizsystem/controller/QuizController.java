@@ -147,11 +147,20 @@ public class QuizController {
 	@Autowired
 	private QuestionService questionService;
 
+//	@PostMapping("/create")
+//	public ResponseEntity<String> createQuiz(@RequestBody Quiz quiz) {
+//		quizService.createQuiz(quiz);
+//		return new ResponseEntity<>("Quiz created successfully!", HttpStatus.CREATED);
+//	}
 	@PostMapping("/create")
 	public ResponseEntity<String> createQuiz(@RequestBody Quiz quiz) {
-		quizService.createQuiz(quiz);
-		return new ResponseEntity<>("Quiz created successfully!", HttpStatus.CREATED);
-	}
+	    try {
+	        quizService.createQuiz(quiz);
+	        return new ResponseEntity<>("Quiz created successfully!", HttpStatus.CREATED);
+	    } catch (RuntimeException e) {
+	        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	    }
+	    }
 
 	@PostMapping("/addQuiz")
 	public ResponseEntity<String> addQuiz(@RequestBody Question question) {
@@ -217,6 +226,16 @@ public class QuizController {
 	    }
 	}
 
-
+	@DeleteMapping("/deleteByTitle/{title}")
+	public ResponseEntity<String> deleteQuizByTitle(@PathVariable String title) {
+	    try {
+	        quizService.deleteQuizByTitle(title);
+	        return new ResponseEntity<>("Quiz deleted successfully!", HttpStatus.OK);
+	    } catch (ResourceNotFoundException e) {
+	        return new ResponseEntity<>("Quiz not found!", HttpStatus.NOT_FOUND);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>("Failed to delete quiz!", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
 
 }

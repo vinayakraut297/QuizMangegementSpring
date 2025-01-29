@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ public class Quiz {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@Column(unique = true, nullable = false)
 	private String title;
 	private String description;
 	private int createdBy;
@@ -24,8 +26,8 @@ public class Quiz {
 	private List<Question> questions = new ArrayList<>();
 
 	public void addQuestion(Question question) {
-	    questions.add(question);
-	    question.setQuiz(this);
+		questions.add(question);
+		question.setQuiz(this);
 	}
 
 	private Timestamp createdAt;
